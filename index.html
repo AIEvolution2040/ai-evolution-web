@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI.EVOLUTION - Soluciones de IA para tu vida</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* Sutil cambio al fondo */
+            color: #e6e6e6;
+            overflow-x: hidden;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #1f2735, #141b25);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(90deg, #20e2d3, #6a4cff); /* Nuevos colores: cyan a púrpura */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(32, 226, 211, 0.5); /* Sombra que coincide con el nuevo color */
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(32, 226, 211, 0.7); /* Nuevo color de brillo */
+        }
+        
+        .card-hover:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 30px rgba(32, 226, 211, 0.2); /* Nueva sombra de tarjeta */
+        }
+
+        /* Chatbot Icon */
+        .chatbot-icon {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: #20e2d3; /* Nuevo color */
+            border-radius: 50%;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(32, 226, 211, 0.5);
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-icon i {
+            font-size: 28px;
+            color: white;
+        }
+
+        /* Cart Icon */
+        .cart-icon {
+            position: relative;
+        }
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #ff4c4c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Language Dropdown */
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        
+        /* Custom Message Box */
+        .message-box {
+            position: fixed;
+            bottom: 100px;
+            right: 24px;
+            background-color: #1a202c;
+            color: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            transform: translateX(200%);
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .message-box.active {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="gradient-bg">
+
+    <!-- Navbar -->
+    <header class="p-6">
+        <nav class="container mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2">
+                <!-- AI logo with a futuristic brain -->
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="#20e2d3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M8 12C8 14.2091 10 16 12 16C14 16 16 14.2091 16 12C16 9.79086 14 8 12 8C10 8 8 9.79086 8 12Z" stroke="#6a4cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 2V6" stroke="#20e2d3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 18V22" stroke="#20e2d3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4.93 4.93L7.76 7.76" stroke="#20e2d3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16.24 16.24L19.07 19.07" stroke="#20e2d3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12H6" stroke="#20e2d3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M18 12H22" stroke="#20e2d3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="text-2xl font-bold glow-text">AI.EVOLUTION</span>
+            </div>
+
+            <!-- Main Menu & Actions -->
+            <div class="flex items-center space-x-6">
+                <!-- Language Dropdown -->
+                <div class="relative dropdown">
+                    <button class="flex items-center p-2 rounded-lg hover:bg-gray-700 transition">
+                        <i class="fas fa-globe mr-1"></i>
+                        <span>ES</span>
+                    </button>
+                    <ul class="dropdown-menu hidden absolute top-full mt-2 w-32 bg-gray-800 rounded-lg shadow-lg">
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-700 rounded-t-lg">ES - Español</a></li>
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-700">EN - English</a></li>
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-700">PT - Português</a></li>
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-700">IT - Italiano</a></li>
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-700">FR - Français</a></li>
+                        <li><a href="#" class="block px-4 py-2 hover:bg-gray-700 rounded-b-lg">ZH - Mandarin</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Cart Icon -->
+                <div class="cart-icon">
+                    <button class="p-2 rounded-lg hover:bg-gray-700 transition" id="cart-btn">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                    </button>
+                    <span class="cart-count hidden" id="cart-count">0</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-8 text-center">
+        <!-- Hero Section -->
+        <section class="mb-16">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 glow-text">Tu Evolución Personal y Profesional impulsada por la IA.</h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-4xl mx-auto mb-10">
+                Descubre un futuro donde la tecnología te da el poder de superar cualquier desafío. Nuestros infoproductos te guían paso a paso para alcanzar tus metas en salud, educación, finanzas y más.
+            </p>
+            <button class="btn-gradient text-white font-bold py-4 px-10 rounded-full text-lg shadow-lg">
+                Explora Nuestros Productos
+            </button>
+        </section>
+
+        <!-- Nueva imagen de fondo con tema innovador -->
+        <div class="relative w-full overflow-hidden rounded-3xl mb-16 shadow-2xl">
+            <video src="ai_evolution_video.mp4" autoplay loop muted class="w-full h-auto object-cover rounded-3xl"></video>
+        </div>
+
+        <!-- Product Grid Section -->
+        <section>
+            <h2 class="text-3xl font-bold mb-10 glow-text">Nuestros Infoproductos</h2>
+
+            <!-- PDFs Section -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold mb-6 text-left text-cyan-400">PDFs</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- PDF: Crecimiento Personal y Profesional -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-seedling text-6xl mx-auto mb-4 text-purple-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Crecimiento Personal y Profesional</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Guía para el desarrollo de habilidades y liderazgo con IA.</p>
+                        <span class="text-2xl font-bold text-green-400">$14.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+
+                    <!-- PDF: Educación -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-graduation-cap text-6xl mx-auto mb-4 text-yellow-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Educación del Futuro</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Optimiza tus estudios con técnicas de aprendizaje potenciadas por IA.</p>
+                        <span class="text-2xl font-bold text-green-400">$12.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+
+                    <!-- PDF: Salud -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-heartbeat text-6xl mx-auto mb-4 text-pink-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Bienestar Digital</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Gestiona tu salud con seguimiento inteligente y consejos personalizados.</p>
+                        <span class="text-2xl font-bold text-green-400">$19.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+
+                    <!-- PDF: Finanzas -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-chart-line text-6xl mx-auto mb-4 text-green-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Finanzas Inteligentes</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Toma el control de tus finanzas con análisis predictivo y estrategias de ahorro.</p>
+                        <span class="text-2xl font-bold text-green-400">$15.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ebooks Section -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold mb-6 text-left text-cyan-400">Ebooks</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Ebook: Salud -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-apple-alt text-6xl mx-auto mb-4 text-red-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Ebook de Salud</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Descubre cómo la IA puede optimizar tu nutrición y rutinas de ejercicio.</p>
+                        <span class="text-2xl font-bold text-green-400">$24.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+
+                    <!-- Ebook: Finanzas - Icono actualizado -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-sack-dollar text-6xl mx-auto mb-4 text-green-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Ebook de Finanzas</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Guía para el éxito financiero y la inversión en el mundo de la IA.</p>
+                        <span class="text-2xl font-bold text-green-400">$29.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+
+                    <!-- Ebook: Espiritualidad -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-hand-holding-heart text-6xl mx-auto mb-4 text-blue-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Ebook de Espiritualidad</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Encuentra la paz interior a través de la meditación asistida por tecnología.</p>
+                        <span class="text-2xl font-bold text-green-400">$18.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+
+                    <!-- Ebook: Mujeres Empoderadas - Icono actualizado -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-hand-fist text-6xl mx-auto mb-4 text-orange-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Ebook: Mujeres Empoderadas</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Soluciones con IA para la vida de la mujer moderna.</p>
+                        <span class="text-2xl font-bold text-green-400">$21.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plantillas Section -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold mb-6 text-left text-cyan-400">Plantillas</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Plantilla: Hojas de Vida -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-file-alt text-6xl mx-auto mb-4 text-indigo-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Plantillas para Hojas de Vida</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Crea un currículum impactante con diseños profesionales.</p>
+                        <span class="text-2xl font-bold text-green-400">$9.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+                    
+                    <!-- Plantilla: Checklists -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-check-square text-6xl mx-auto mb-4 text-teal-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Checklists de Eficacia</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Optimiza tu tiempo y recursos con plantillas inteligentes.</p>
+                        <span class="text-2xl font-bold text-green-400">$8.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+
+                    <!-- Plantilla: Rutinas Diarias - Título y descripción actualizados -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-child text-6xl mx-auto mb-4 text-lime-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Plantilla de Rutinas Diarias</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Donde se planifican actividades cotidianas de los niños en educación, deporte, recreación, relajación y rutina diaria en escuela/colegio y hogar.</p>
+                        <span class="text-2xl font-bold text-green-400">$7.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+
+                    <!-- Plantilla: Manejo del Tiempo -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-tasks text-6xl mx-auto mb-4 text-red-400"></i>
+                        <h4 class="text-xl font-semibold mb-2">Manejo de Tiempo y Recursos</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Organiza tu día a día con plantillas para optimizar el rendimiento.</p>
+                        <span class="text-2xl font-bold text-green-400">$9.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Retos Section -->
+            <div>
+                <h3 class="text-2xl font-bold mb-6 text-left text-cyan-400">Retos</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Reto: Bajar de peso -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-weight text-6xl mx-auto mb-4 text-teal-300"></i>
+                        <h4 class="text-xl font-semibold mb-2">Reto: Adelgaza en 30 Días</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Plan de entrenamiento y nutrición asistido por IA.</p>
+                        <span class="text-2xl font-bold text-green-400">$39.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+
+                    <!-- Reto: Alimentación saludable -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-leaf text-6xl mx-auto mb-4 text-green-300"></i>
+                        <h4 class="text-xl font-semibold mb-2">Reto: Alimentación Saludable</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Guía completa para una dieta equilibrada y deliciosa.</p>
+                        <span class="2xl font-bold text-green-400">$35.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+
+                    <!-- Reto: Ejercicios -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-dumbbell text-6xl mx-auto mb-4 text-orange-300"></i>
+                        <h4 class="text-xl font-semibold mb-2">Reto: Ejercicios Prácticos</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Rutinas de ejercicio para adelgazar sin salir de casa.</p>
+                        <span class="text-2xl font-bold text-green-400">$32.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+                    
+                    <!-- Reto: Espiritualidad -->
+                    <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform transition duration-300 card-hover">
+                        <i class="fas fa-hands-praying text-6xl mx-auto mb-4 text-purple-300"></i>
+                        <h4 class="text-xl font-semibold mb-2">Reto: Espiritualidad y Fe</h4>
+                        <p class="text-gray-400 mb-4 text-sm">Crece espiritualmente y honra a Dios con tus pensamientos, palabras y acciones.</p>
+                        <span class="text-2xl font-bold text-green-400">$45.99</span>
+                        <button class="btn-gradient w-full mt-4 py-3 rounded-xl font-bold">Añadir al Carrito</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 py-8 text-center text-gray-400 border-t border-gray-700">
+        <p>&copy; 2023 AI.EVOLUTION. Todos los derechos reservados.</p>
+        <div class="mt-4 flex flex-col items-center justify-center space-y-2">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-envelope"></i>
+                <span>ai.evolution2040@gmail.com</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-phone-alt"></i>
+                <span>+573012040460</span>
+            </div>
+            <div class="mt-4 space-x-4 text-xl">
+                <a href="https://instagram.com" class="hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                <a href="https://facebook.com" class="hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot Icon -->
+    <div class="chatbot-icon" id="chatbot-icon">
+        <i class="far fa-comments"></i>
+    </div>
+    
+    <!-- Custom Message Box -->
+    <div id="message-box" class="message-box flex-col">
+        <p id="message-text"></p>
+        <button onclick="hideMessage()" class="mt-2 text-sm text-gray-400 hover:text-white transition">Cerrar</button>
+    </div>
+
+    <script>
+        const cartBtn = document.getElementById('cart-btn');
+        const cartCount = document.getElementById('cart-count');
+        const chatbotIcon = document.getElementById('chatbot-icon');
+        const productButtons = document.querySelectorAll('.btn-gradient');
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+        let itemCount = 0;
+
+        // Function to show a custom message
+        function showMessage(message) {
+            messageText.textContent = message;
+            messageBox.classList.add('active');
+            setTimeout(hideMessage, 3000); // Hide after 3 seconds
+        }
+
+        // Function to hide the message
+        function hideMessage() {
+            messageBox.classList.remove('active');
+        }
+
+        // Function to update cart count
+        function updateCartCount() {
+            if (itemCount > 0) {
+                cartCount.textContent = itemCount;
+                cartCount.classList.remove('hidden');
+            } else {
+                cartCount.classList.add('hidden');
+            }
+        }
+
+        // Add event listeners to "Añadir al Carrito" buttons
+        productButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                itemCount++;
+                updateCartCount();
+                showMessage('Producto añadido al carrito!');
+            });
+        });
+
+        // Chatbot icon click event
+        chatbotIcon.addEventListener('click', () => {
+            showMessage('¡Hola! Soy tu asistente virtual. ¿En qué puedo ayudarte hoy?');
+        });
+
+        // Simple message for cart button
+        cartBtn.addEventListener('click', () => {
+            if (itemCount > 0) {
+                showMessage(`Tienes ${itemCount} productos en tu carrito. ¡Gracias por tu compra!`);
+            } else {
+                showMessage('Tu carrito está vacío. ¡Explora nuestros productos!');
+            }
+        });
+    </script>
+
+</body>
+</html>
